@@ -1,11 +1,7 @@
 package model
 
-import (
-	"math/big"
-)
-
 // ProxyDecrypt 进行服务器代理解密
-func ProxyDecrypt(SK *UserDecryptionKey, CT *Ciphertext, f *big.Int, globalParams *GlobalParams) (*big.Int, error) {
+/*func ProxyDecrypt(SK *UserDecryptionKey, CT *Ciphertext, f *big.Int, globalParams *GlobalParams) (*big.Int, error) {
 	// 计算 Froot
 	Froot := new(pairing).Pair(globalParams.G, globalParams.G).Exp(new(big.Int).Mul(SK.S2, f), globalParams.G)
 	Froot.Exp(Froot, new(big.Int).Mul(globalParams.Alpha, CT.R2), globalParams.G)
@@ -29,4 +25,4 @@ func UserDecrypt(CT *Ciphertext, D *big.Int, globalParams *GlobalParams) ([]byte
 	}
 
 	return m, nil
-}
+}*/

@@ -13,7 +13,7 @@ const (
 )
 
 // Search 使用搜索算法验证陷门并返回结果
-func Search(tw *Trapdoor, sCirc []*big.Int, I1, I2, I3 *big.Int, sigmaI1, sigmaI2 *big.Int, e *pairing) SearchAlgorithmResult {
+func Search(tw *Trapdoor, sCirc []*big.Int, I1, I2, I3 *big.Int, sigmaI1, sigmaI2 *big.Int) SearchAlgorithmResult {
 	// 条件1：验证属性集是否满足访问策略
 	matchAttr := true
 	for _, s := range sCirc {
