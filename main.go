@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"time"
+
+	"github.com/yourusername/yourproject/model"
 )
 
 func main() {
@@ -63,5 +65,5 @@ func main() {
 	fmt.Printf("Decrypt 运行时间：%s\n", decryptDuration)
 
 	totalDuration := time.Since(startTime)
-	fmt.Printf("总运行时间：%s\n", totalDuration)
+	fmt.Printf("总运行时间xiugai：%s\n", totalDuration)
 }
