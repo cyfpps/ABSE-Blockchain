@@ -12,7 +12,7 @@ type UserDecryptionKey struct {
 }
 
 // GenerateUserDecryptionKey 根据系统属性集和访问控制策略生成用户解密密钥
-func GenerateUserDecryptionKey(globalParams *GlobalParams, attributes []string) (*UserDecryptionKey, error) {
+func GenerateUserDecryptionKey(globalParams *GlobalParams, masterKey *MasterKey, attributes []string) (*UserDecryptionKey, error) {
 	// 生成随机数 t
 	t, err := generateRandomElement(globalParams.G)
 	if err != nil {
@@ -20,13 +20,13 @@ func GenerateUserDecryptionKey(globalParams *GlobalParams, attributes []string) 
 	}
 
 	// 计算 S1 和 S2
-	s1 := new(big.Int).Exp(globalParams.GAlpha, t, globalParams.G)
-	s2 := new(big.Int).Exp(globalParams.GBeta, t, globalParams.G)
+	s1 := new(big.Int).Exp(globalParams.G, new(big.Int).Add(globalParams.GAlpha, new(big.Int).Mul(globalParams.GBeta, t)), nil)
+	s2 := new(big.Int).Exp(globalParams.G, t, nil)
 
 	// 计算属性密钥
 	attributeKeys := make(map[string]*big.Int)
 	for _, attr := range attributes {
-		h, found := globalParams.UK[attr]
+		h, found := masterKey.MK[attr]
 		if !found {
 			return nil, err
 		}

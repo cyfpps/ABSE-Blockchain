@@ -18,6 +18,12 @@ type GlobalParams struct {
 	UK     map[string]*big.Int
 }
 
+type MasterKey struct {
+	Alpha *big.Int
+	Beta  *big.Int
+	MK    map[string]*big.Int
+}
+
 // 初始化全局参数
 func Setup(lambda int) (*GlobalParams, error) {
 	p, err := generatePrime(lambda)
@@ -45,10 +51,10 @@ func Setup(lambda int) (*GlobalParams, error) {
 		return nil, err
 	}
 
-	gAlpha := new(big.Int).Exp(g, alpha, p)
-	gBeta := new(big.Int).Exp(g, beta, p)
+	gAlpha := new(big.Int).Exp(g, alpha, nil)
+	gBeta := new(big.Int).Exp(g, beta, nil)
 
-	eAlpha := new(big.Int).Exp(g, alpha, p) // 此处可能需要根据实际情况进行调整
+	eAlpha := new(big.Int).Exp(g, alpha, nil)
 
 	// 定义哈希函数
 	h1 := func(data []byte) *big.Int {
@@ -66,10 +72,31 @@ func Setup(lambda int) (*GlobalParams, error) {
 		return hash
 	}
 
+	// 固定的五个属性集合（五个大学）
+	attributes := []string{"university1", "university2", "university3", "university4", "university5"}
+
+	// 随机选择一个属性作为满足条件的属性
+	attrIndex := rand.Intn(len(attributes))
+	attr := attributes[attrIndex]
+
+	// 使用属性集合 attributes
+	S := attributes
+
 	// 初始化用户密钥
 	UK := make(map[string]*big.Int)
+	MK := make(map[string]*big.Int)
+	for _, attr := range S {
+		h := generateRandomElement(p) // 生成随机元素作为 h_i
+		MK[attr] = h
+		UK[attr] = new(big.Int).Exp(g, h)
+	}
 
 	// TODO: 初始化用户密钥
+	MasterKey := &MasterKey{
+		Alpha: alpha,
+		Beta:  beta,
+		MK:    MK,
+	}, nil
 
 	params := &GlobalParams{
 		G:      g,

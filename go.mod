@@ -1,4 +1,4 @@
-module ABSE
+module github.com/cyfpps/ABSE-Blockchain
 
 go 1.18
 
