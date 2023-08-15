@@ -2,6 +2,8 @@ package model
 
 import (
 	"math/big"
+
+	"github.com/Nik-U/pbc"
 )
 
 // UserDecryptionKey 定义用户解密密钥结构体
@@ -30,7 +32,10 @@ func GenerateUserDecryptionKey(globalParams *GlobalParams, masterKey *MasterKey,
 		if !found {
 			return nil, err
 		}
-		attrKey := new(big.Int).Exp(h, t, globalParams.G)
+		exp := new(pbc.Element).Set(t)
+		exp.Div(exp, hi)
+		attrKey := new(pbc.Element)
+		attrKey.PowZn(globalParams.G, exp)
 		attributeKeys[attr] = attrKey
 	}
 

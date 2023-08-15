@@ -1,42 +1,53 @@
 package model
 
 import (
-	"math/big"
+	"github.com/Nik-U/pbc"
 )
 
-// SearchAlgorithmResult 表示搜索算法的结果
-type SearchAlgorithmResult int
+// SearchAlgorithm 实现搜索算法
+func SearchAlgorithm(I Index, TW *Trapdoor, SStar []*pbc.Element) int {
+	n := len(SStar)
+	gt := pbc.NewGT()
+	z := gt.NewZr()
 
-const (
-	MatchFound SearchAlgorithmResult = 1 // 匹配成功
-	NoMatch    SearchAlgorithmResult = 0 // 无匹配
-)
-
-// Search 使用搜索算法验证陷门并返回结果
-func Search(tw *Trapdoor, sCirc []*big.Int, I1, I2, I3 *big.Int, sigmaI1, sigmaI2 *big.Int) SearchAlgorithmResult {
-	// 条件1：验证属性集是否满足访问策略
-	matchAttr := true
-	for _, s := range sCirc {
-		if s.Cmp(big.NewInt(0)) == 0 {
-			matchAttr = false
+	// 条件（1）：检查 S* 是否满足访问策略
+	validSStar := true
+	for i := 0; i < n; i++ {
+		if !IsAttributeSatisfied(SStar[i]) {
+			validSStar = false
 			break
 		}
 	}
-	if !matchAttr {
-		return NoMatch
+
+	// 条件（2）：验证等式是否成立
+	if validSStar {
+		TW2 := pbc.NewG2().SetBytes(TW.TW2.Bytes())
+		I1 := pbc.NewG1().SetBytes(I.I1.Bytes())
+		I2 := pbc.NewG2().SetBytes(I.I2.Bytes())
+		TW1 := z.SetFromHash(I1).PowZn(I2)
+		TW3 := z.Mul(TW1, TW2)
+
+		if TW3.Equals(TW.TW3) {
+			return 1
+		}
+
+		for i := 0; i < n; i++ {
+			sigma2 := pbc.NewG1().SetBytes(SStar[i].Bytes())
+			sigma1 := pbc.NewG1().SetBytes(I.I3.Bytes())
+			g := pbc.NewG1().SetBytes(I.I3.Bytes())
+
+			if gt.Pair(sigma2, g).Equals(gt.Pair(sigma1, I2)) {
+				return 1
+			}
+		}
 	}
 
-	// 条件2：验证等式
-	leftSide1 := new(pairing).MulLine([][2]*big.Int{{tw.TW2, I1}, {I2, tw.TW1}})
-	if leftSide1.Cmp(tw.TW3) != 0 {
-		return NoMatch
-	}
+	return 0
+}
 
-	leftSide2 := new(pairing).Pair(sigmaI2, g)
-	rightSide2 := new(pairing).Pair(sigmaI1, I3)
-	if leftSide2.Cmp(rightSide2) != 0 {
-		return NoMatch
-	}
-
-	return MatchFound
+// IsAttributeSatisfied 检查属性是否满足访问策略
+func IsAttributeSatisfied(attr *pbc.Element) bool {
+	// 在此添加逻辑以检查属性是否满足访问策略
+	// 返回 true 表示满足，返回 false 表示不满足
+	return true
 }

@@ -1,28 +1,44 @@
 package model
 
-// ProxyDecrypt 进行服务器代理解密
-/*func ProxyDecrypt(SK *UserDecryptionKey, CT *Ciphertext, f *big.Int, globalParams *GlobalParams) (*big.Int, error) {
-	// 计算 Froot
-	Froot := new(pairing).Pair(globalParams.G, globalParams.G).Exp(new(big.Int).Mul(SK.S2, f), globalParams.G)
-	Froot.Exp(Froot, new(big.Int).Mul(globalParams.Alpha, CT.R2), globalParams.G)
+import (
+	"math/big"
 
-	// 计算 D
-	D := new(pairing).Mul(Froot, new(pairing).Pair(SK.S1, CT.C1))
-	D = new(pairing).Div(D, new(pairing).Pair(SK.S2, CT.C))
+	"github.com/Nik-U/pbc"
+)
 
-	return D, nil
-}
+// DecryptDU 解密算法
+func DecryptDU(f *big.Int, CT1 *Ciphertext, Addr *big.Int) ([]byte, error) {
+	// 获得加密文件 E(m)
+	E := CT1.C
 
-// UserDecrypt 进行数据使用者二次解密
-func UserDecrypt(CT *Ciphertext, D *big.Int, globalParams *GlobalParams) ([]byte, error) {
-	// 计算密钥ck
-	ck := new(pairing).Mul(CT.C, new(pairing).Pair(globalParams.G, globalParams.G).Exp(globalParams.Alpha, D.Denominator()))
+	// 计算密钥 ck
+	ck := CalculateCK(f, CT1, Addr)
 
-	// 数据使用者解密
-	m, err := decrypt(CT.CT, ck, globalParams)
+	// 使用密钥 ck 解密密文以获得明文文件 m
+	m, err := DecryptCipherText(ck, E)
 	if err != nil {
 		return nil, err
 	}
 
 	return m, nil
-}*/
+}
+
+// CalculateCK 计算密钥 ck
+func CalculateCK(f *big.Int, CT1 *Ciphertext, Addr *big.Int) *pbc.Element {
+	g := CT1.Params.NewG1().SetBytes(CT1.Params.G.Bytes())
+
+	Df := CT1.D.Exp(CT1.D, f.Neg(f)) // D^(-f)
+
+	ck := CT1.C.Mul(CT1.C, g.PowZn(Df)) // ck * e(g, g)^(alpha r2) / e(g, g)^(alpha r2)
+
+	return ck
+}
+
+// DecryptCipherText 使用密钥解密密文
+func DecryptCipherText(ck *pbc.Element, E *pbc.Element) ([]byte, error) {
+	// 使用密钥 ck 解密密文 E
+	m := E.Mul(E, ck.Invert(ck)) // E * ck^(-1)
+
+	// 转换为字节数组并返回
+	return m.Bytes(), nil
+}

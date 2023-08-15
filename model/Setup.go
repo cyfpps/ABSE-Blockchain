@@ -7,6 +7,7 @@ import (
 
 // 定义全局参数结构体
 type GlobalParams struct {
+	p      *big.Int
 	G      *big.Int
 	W      *big.Int
 	GAlpha *big.Int
@@ -73,7 +74,7 @@ func Setup(lambda int) (*GlobalParams, error) {
 	}
 
 	// 固定的五个属性集合（五个大学）
-	attributes := []string{"university1", "university2", "university3", "university4", "university5"}
+	attributes := []string{"cyf", "patient", "male", "female", "ten"}
 
 	// 随机选择一个属性作为满足条件的属性
 	attrIndex := rand.Intn(len(attributes))
@@ -96,9 +97,10 @@ func Setup(lambda int) (*GlobalParams, error) {
 		Alpha: alpha,
 		Beta:  beta,
 		MK:    MK,
-	}, nil
+	}
 
 	params := &GlobalParams{
+		p:      p,
 		G:      g,
 		W:      w,
 		GAlpha: gAlpha,
@@ -110,7 +112,7 @@ func Setup(lambda int) (*GlobalParams, error) {
 		UK:     UK,
 	}
 
-	return params, nil
+	return MasterKey, params, nil
 }
 
 // 生成指定位数的素数
