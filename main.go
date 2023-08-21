@@ -267,4 +267,5 @@ func main() {
 		fmt.Println("Private Key:", DataOwner.PrivateKey)
 		fmt.Println("Public Key (PKDO):", DataOwner.PKDO)*/
 	fmt.Println("撤销失败。")
+	fmt.Println("撤销失败。")
 }
