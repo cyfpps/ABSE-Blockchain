@@ -1,36 +1,11 @@
 package model
 
 import (
-	"math/big"
-	"time"
-
 	"github.com/Nik-U/pbc"
 )
 
-// 定义全局参数结构体
-type GlobalParams struct {
-	p       *big.Int
-	G       *pbc.Element
-	W       *pbc.Element
-	GAlpha  *pbc.Element
-	GBeta   *pbc.Element
-	EAlpha  *pbc.Element
-	H1      func([]byte) *pbc.Element
-	H2      func([]byte) *pbc.Element
-	H3      func([]byte) *pbc.Element
-	UK      map[string]*pbc.Element
-	Pairing *pbc.Pairing // 添加 Pairing 字段
-}
-
-type MasterKey struct {
-	Alpha *pbc.Element
-	Beta  *pbc.Element
-	MK    map[string]*pbc.Element
-}
-
-/*
 // 初始化全局参数
-func Setup(lambda *pbc.Element) (*GlobalParams, *MasterKey, error) {
+func xianmen(lambda *pbc.Element) (*GlobalParams, *MasterKey, error) {
 	p, err := generatePrime(lambda)
 	if err != nil {
 		return nil, nil, err
@@ -145,29 +120,16 @@ func generateHashFunction(p *pbc.Element, data []byte) *pbc.Element {
 	hashValue.Mod(hashValue, p)
 	return hashValue
 }
-*/
 
-func Setup(bits int) (string, string, error) {
-	// 模拟返回特殊值
-	gAlpha := "380921101794857052681460657866026239715270429083084269370039619752792324585231268249304460721305979078120654110371981151553432147592981022610299451101372"
-	gBeta := "640414744666624424175777374578974121708083768973764927211731356038300361666865969548599319685237007148327953125339470311191383324626749010903888836650787"
-	startTime := time.Now()
-
-	// 执行一些操作，例如模拟计算过程
-	for i := 0; i < 1000000; i++ {
-		// 模拟一些计算操作
+func generateRandomElement(p *pbc.Element) (*pbc.Element, error) {
+	// 生成一个随机的整数作为元素的字节表示
+	randomBytes := make([]byte, p.Bytes())
+	_, err := rand.Read(randomBytes)
+	if err != nil {
+		return nil, err
 	}
 
-	// 计算运行时间
-	elapsedTime := time.Since(startTime)
-
-	// 目标运行时间
-	targetTime := 150 * time.Microsecond // 1.58 毫秒转换为微秒
-
-	// 如果实际运行时间小于目标运行时间，等待剩余时间
-	if elapsedTime < targetTime {
-		sleepTime := targetTime - elapsedTime
-		time.Sleep(sleepTime)
-	}
-	return gAlpha, gBeta, nil
+	// 创建一个新的元素并将随机字节设置为其值
+	randomElement := p.NewElement().SetBytes(randomBytes)
+	return randomElement, nil
 }

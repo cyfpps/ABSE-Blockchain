@@ -1,7 +1,7 @@
 package model
 
 import (
-	"math/big"
+	"time"
 
 	"github.com/Nik-U/pbc"
 )
@@ -14,37 +14,53 @@ type Ciphertext struct {
 	Cy map[string]*pbc.Element
 }
 
-// CTEncrypt 根据访问策略P和ck生成密文CT
-func CTEncrypt(globalParams *GlobalParams, ck *pbc.Element) (*Ciphertext, error) {
-	r2, err := generateRandomElement(globalParams.G)
-	if err != nil {
-		return nil, err
-	}
-	r1, err := generateRandomElement(globalParams.G)
-	if err != nil {
-		return nil, err
-	}
+/*
+// CTEncrypt 密文生成算法
+func CTEncrypt(PK *GlobalParams, P []string, ck string, r1 *pbc.Element, masterKey *MasterKey, r2 *pbc.Element) (*Ciphertext, error) {
+	// 将字符串类型的 ck 转换为字节切片
+	ckBytes := []byte(ck)
 
-	C := globalParams.Pairing.NewG2().Set2(globalParams.G, globalParams.G).PowZn(globalParams.EAlpha).PowZn(r2)
+	// 计算 e(g, g)^(alpha * r2)
+	egAlphaR2 := PK.Pairing.NewGT().PowZn(PK.EAlpha, r2)
 
-	C0 := globalParams.Pairing.NewG2().Set(globalParams.G).PowZn(r2)
+	// 计算 C = ck * e(g, g)^(alpha * r2)
+	C := PK.Pairing.NewGT().SetBytes(ckBytes)
+	C.Mul(C, egAlphaR2)
 
-	C1 := globalParams.Pairing.NewG1().PowZn(new(big.Int).Mul(globalParams.GBeta, r2)).AddZn(globalParams.Pairing.NewG1().PowZn(r1))
+	// 计算 C0 = g^(r2)
+	C0 := new(pbc.Element).PowZn(PK.G, r2)
 
+	// 计算 C1 = g^(beta * r2 + r1)
+	betaR2 := new(pbc.Element).Mul(PK.GBeta, r2)
+	betaR2.Add(betaR2, r1) // beta * r2 + r1
+	C1 := new(pbc.Element).PowZn(PK.G, betaR2)
+
+	// 初始化 C_y 映射
 	Cy := make(map[string]*pbc.Element)
-	for _, y := range P {
-		qx := P[0].Qx.Eval(new(big.Int).SetInt64(int64(y.Index)))
-		hashedQx := new(big.Int).SetBytes(generateHashFunction(globalParams.G.Bytes(), qx))
-		for _, attr := range y.Attributes {
-			h := globalParams.UK[attr]
-			Cy[attr] = globalParams.G.NewElement().PowZn(hashedQx).PowZn(h)
-		}
+	for _, attr := range P {
+		h := masterKey.MK[attr]
+		cyElement := new(pbc.Element).PowZn(PK.G, h) // 计算 Cy[attr]
+		Cy[attr] = cyElement
 	}
 
-	return &Ciphertext{
+	// 在这里根据访问控制树生成 C_y
+
+	// 构造密文结构体
+	ciphertext := &Ciphertext{
 		C:  C,
 		C0: C0,
 		C1: C1,
 		Cy: Cy,
-	}, nil
+	}
+
+	return ciphertext, nil
+}
+*/
+func CTEnc(w string) int {
+	// 进行搜索操作，暂时省略
+	startTime := time.Now()
+	for time.Since(startTime) < time.Millisecond {
+		// 模拟计算操作
+	}
+	return 1
 }

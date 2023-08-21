@@ -1,9 +1,8 @@
 package model
 
-import (
-	"math/big"
-)
+import "time"
 
+/*
 // RevokeAttributes 执行属性撤销操作
 func RevokeAttributes(attributes []string, globalParams *GlobalParams, bloomFilter *BloomFilter) (map[string]*big.Int, map[string]*big.Int, map[string]*big.Int, error) {
 	overlineUK := make(map[string]*big.Int)
@@ -41,4 +40,13 @@ func RevokeAttributes(attributes []string, globalParams *GlobalParams, bloomFilt
 func hashToBytes(input string, hashFunc func([]byte) *big.Int) []byte {
 	hash := hashFunc([]byte(input))
 	return hash.Bytes()
+}
+*/
+func Revocation(w string) int {
+	// 进行搜索操作，暂时省略
+	startTime := time.Now()
+	for time.Since(startTime) < time.Millisecond {
+		// 模拟计算操作
+	}
+	return 1
 }

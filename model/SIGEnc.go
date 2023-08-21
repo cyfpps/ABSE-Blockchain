@@ -1,8 +1,6 @@
 package model
 
 import (
-	"math/big"
-
 	"github.com/Nik-U/pbc"
 )
 
@@ -12,9 +10,10 @@ type Signature struct {
 	Sigma2 *pbc.Element
 }
 
+/*
 // GenerateSignature 生成密文签名
 func GenerateSignature(CT *Ciphertext, dataOwner *DataOwner, globalParams *GlobalParams) (*Signature, error) {
-	// 计算 H3(CT)
+	// 计算 H3(CT)1
 	H3CT := generateHashFunction(globalParams.G, CT.C.Bytes())
 
 	// 计算 sigma1 = g^{H3(CT)}
@@ -32,3 +31,4 @@ func GenerateSignature(CT *Ciphertext, dataOwner *DataOwner, globalParams *Globa
 		Sigma2: sigma2,
 	}, nil
 }
+*/

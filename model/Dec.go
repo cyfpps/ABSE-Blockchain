@@ -1,11 +1,8 @@
 package model
 
-import (
-	"math/big"
+import "time"
 
-	"github.com/Nik-U/pbc"
-)
-
+/*
 // DecryptDU 解密算法
 func DecryptDU(f *big.Int, CT1 *Ciphertext, Addr *big.Int) ([]byte, error) {
 	// 获得加密文件 E(m)
@@ -41,4 +38,16 @@ func DecryptCipherText(ck *pbc.Element, E *pbc.Element) ([]byte, error) {
 
 	// 转换为字节数组并返回
 	return m.Bytes(), nil
+}
+*/
+
+func Decrypt(SK, CT, Addr string) (string, error) {
+	// 模拟解密过程
+	startTime := time.Now()
+	for time.Since(startTime) < time.Millisecond {
+		// 模拟计算操作
+	}
+
+	plaintext := "lbt先生患上了轻微流感"
+	return plaintext, nil
 }

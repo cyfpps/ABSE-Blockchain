@@ -1,11 +1,6 @@
 package model
 
-import (
-	"math/big"
-
-	"github.com/Nik-U/pbc"
-)
-
+/*
 // ProxyDecryptionAlgorithm 实现代理解密算法
 func ProxyDecryptionAlgorithm(SKPrime *UserDecryptionKey, CT *Ciphertext) (*Ciphertext, *UserDecryptionKey) {
 	// 获取代理解密算法需要的参数
@@ -86,3 +81,4 @@ func CalculateD(FRoot *pbc.Element, alpha *big.Int, beta *big.Int, r1 *big.Int, 
 	D.Mul(D, g)
 	return D
 }
+*/
