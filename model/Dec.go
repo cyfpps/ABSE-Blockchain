@@ -47,7 +47,6 @@ func Decrypt(SK, CT, Addr string) (string, error) {
 	for time.Since(startTime) < time.Millisecond {
 		// 模拟计算操作
 	}
-
 	plaintext := "lbt先生患上了轻微流感"
 	return plaintext, nil
 }

@@ -171,3 +171,74 @@ func Setup(bits int) (string, string, error) {
 	}
 	return gAlpha, gBeta, nil
 }
+
+/*
+// model/setup.go
+package model
+
+import (
+	"crypto/sha256"
+	"hash"
+	"math/big"
+
+	"github.com/Nik-U/pbc"
+)
+
+type PublicKey struct {
+	G    *pbc.Element
+	W    *pbc.Element
+	Ga   *pbc.Element
+	Gb   *pbc.Element
+	Egga *pbc.Element
+	H1   hash.Hash
+	H2   hash.Hash
+	H3   hash.Hash
+	UK   map[string]*big.Int
+}
+
+type MasterKey struct {
+	Alpha *pbc.Element
+	Beta  *pbc.Element
+	Hi    map[string]*big.Int
+}
+
+func Setup(lambda uint32) (PublicKey, MasterKey) {
+	params := pbc.GenerateA(lambda, uint32(0))
+	pairing := params.NewPairing()
+
+	g := pairing.NewG1().Rand()
+	w := pairing.NewG1().Rand()
+
+	H1 := sha256.New()
+	H2 := sha256.New()
+	H3 := sha256.New()
+
+	alpha := pairing.NewZr().Rand()
+	beta := pairing.NewZr().Rand()
+
+	U := []string{"attr1", "attr2", "attr3"}
+	h := make(map[string]*big.Int)
+	for _, attr := range U {
+		h[attr] = pairing.NewZr().Rand().BigInt()
+	}
+
+	PK := PublicKey{
+		G:    g,
+		W:    w,
+		Ga:   pairing.NewG1().PowZn(g, alpha),
+		Gb:   pairing.NewG1().PowZn(g, beta),
+		Egga: pairing.NewGT().PowZn(pairing.NewGT().Pair(g, g), alpha),
+		H1:   H1,
+		H2:   H2,
+		H3:   H3,
+		UK:   h,
+	}
+	MK := MasterKey{
+		Alpha: alpha,
+		Beta:  beta,
+		Hi:    h,
+	}
+
+	return PK, MK
+}
+*/

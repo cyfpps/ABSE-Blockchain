@@ -98,3 +98,66 @@ func (bf *BloomFilter) CollectHashValues() []uint64 {
 
 	return hashValues
 }
+
+/*
+package model
+
+import (
+	"hash"
+)
+
+type BloomFilter struct {
+	name    string
+	bits    []int
+	hashFns []hash.Hash64
+	size    int
+	k       int
+}
+
+func NewBloomFilter(name string, size int, k int, hashFns []hash.Hash64) *BloomFilter {
+	return &BloomFilter{
+		name:    name,
+		bits:    make([]int, size),
+		hashFns: hashFns,
+		size:    size,
+		k:       k,
+	}
+}
+
+func (bf *BloomFilter) BloomAdd(data string) {
+	dataBytes := []byte(data)
+
+	for _, hashFn := range bf.hashFns {
+		hashFn.Reset()
+		hashFn.Write(dataBytes)
+		hashValue := hashFn.Sum64() % uint64(bf.size)
+		bf.bits[hashValue]++
+	}
+}
+
+func (bf *BloomFilter) BloomContains(data string) bool {
+	dataBytes := []byte(data)
+
+	for _, hashFn := range bf.hashFns {
+		hashFn.Reset()
+		hashFn.Write(dataBytes)
+		hashValue := hashFn.Sum64() % uint64(bf.size)
+		if bf.bits[hashValue] == 0 {
+			return false
+		}
+	}
+	return true
+}
+
+func (bf *BloomFilter) CollectHashValues() []uint64 {
+	hashValues := make([]uint64, 0)
+
+	for hashValue, bit := range bf.bits {
+		if bit > 0 {
+			hashValues = append(hashValues, uint64(hashValue))
+		}
+	}
+
+	return hashValues
+}
+*/
