@@ -116,6 +116,15 @@ func SigEncrypt(PK PublicKey, CT string, sk_DO *pbc.Element) Sigma {
 	// 计算σ2i = (w^H3(CTi))^ξ
 	temp := pairing.NewG1().PowZn(PK.W, h3Element)
 	sigma2 := pairing.NewG1().PowZn(temp, sk_DO)
+	l := pairing.NewGT()
+	//	c := pairing.NewGT()
+	l.Pair(PK.W, PK.G)
+	fmt.Println("l:", l)
+	te := pairing.NewGT().PowZn(l, sk_DO)
+	fmt.Println("sk_DO", sk_DO)
+	fmt.Println("te", te)
+	tes := pairing.NewGT().PowZn(te, h3Element)
+	fmt.Println("tes", tes)
 	fmt.Println("sigma.Sigma2", sigma2)
 	fmt.Println("PK.G2222", PK.G)
 	return Sigma{Sigma1: sigma1, Sigma2: sigma2}
@@ -124,26 +133,39 @@ func SigEncrypt(PK PublicKey, CT string, sk_DO *pbc.Element) Sigma {
 func IndexGen(KW []string, PK PublicKey, sk_DO *pbc.Element) Index {
 	pairing := PK.Pairing
 	fmt.Println("PK.G222", PK.G)
+	fmt.Println("sk_DO1", sk_DO)
 	// 随机选择ρ
 	rho := pairing.NewZr().Rand()
-	fmt.Println("PK.G33", PK.G)
+	fmt.Println("rho", rho)
+	fmt.Println("sk_DO34", sk_DO)
 	// 计算temp1 = ξ - Σ H2(kwi)
-	temp1 := sk_DO
+	temp1 := pairing.NewZr().Set(sk_DO)
+
 	for _, kw := range KW {
 		h2 := hashToBigInt(PK.H2, kw)
 		h2Element := pairing.NewZr().SetBig(h2)
+
 		temp1 = temp1.Sub(temp1, h2Element)
 	}
-	fmt.Println("PK.G332", PK.G)
+
+	fmt.Println("temp1", temp1)
+	fmt.Println("rho4", rho)
 	// 计算temp2 = w * g^(-ρ)
-	temp2 := pairing.NewG1().Mul(PK.W, pairing.NewG1().PowZn(PK.G, rho.Neg(rho)))
-	fmt.Println("PK.G323332", PK.G)
+	temp3 := pairing.NewZr().Neg(rho)
+	temp2 := pairing.NewG1().Mul(PK.W, pairing.NewG1().PowZn(PK.G, temp3))
+	fmt.Println("rho3", rho)
+	fmt.Println("sk_DO3", sk_DO)
 	// 计算I1, I2, I3
 	I1 := temp2.PowZn(temp2, temp1.Invert(temp1))
-
+	fmt.Println("rho2", rho)
 	I2 := pairing.NewGT().PowZn(pairing.NewGT().Pair(PK.G, PK.G), rho)
+	fmt.Println("rho12312", rho)
 	fmt.Println("PK.G33456", PK.G)
 	I3 := pairing.NewG1().PowZn(PK.W, sk_DO)
+	fmt.Println("rho12wqeqwe2", rho)
 	fmt.Println("I3", I3)
+	fmt.Println("sk_DO4", sk_DO)
+	fmt.Println("rho12wqeqwe2", rho)
+	fmt.Println("PK.W", PK.W)
 	return Index{I1: I1, I2: I2, I3: I3}
 }

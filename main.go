@@ -12,12 +12,7 @@ import (
 
 
 
-
-
-
-
 	"github.com/Nik-U/pbc"
-
 	"github.com/cyfpps/ABSE-Blockchain/model" // 修改为你的实际路径
 )
 
@@ -299,6 +294,7 @@ func main() {
 	fmt.Println("PK:", PK)
 	fmt.Println("MK:", MK)
 	fmt.Println("PK.G", PK.G)
+	fmt.Println("PK.W", PK.W)
 	// 定义属性集和访问策略
 	S := []string{"attr1", "attr2", "attr3"}
 	P := []string{"attr1", " attr2", "attr4", "attr3"}
@@ -322,7 +318,7 @@ func main() {
 	fmt.Println("User GBFA:", userKeys.GBFA)
 	fmt.Println("User SCirc:", userKeys.SCirc)
 	fmt.Println("User ck:", MK.Ck)
-
+	fmt.Println("doPrivateKey", doPrivateKey)
 	/*bf := userKeys.GBFA
 	contains := bf.Contains("attr1")
 	contain2 := bf.Contains("attr3")
@@ -335,7 +331,7 @@ func main() {
 		fmt.Println("Satisfies policy:", MODEL.Satisfies(root, S))
 		fmt.Println("------")
 	}
-
+	fmt.Println("doPrivateKey1", doPrivateKey)
 	params := pbc.GenerateA(160, 512)
 	pairing := params.NewPairing()
 
@@ -353,13 +349,13 @@ func main() {
 
 	// 示例CT
 	CT := "examplerrrrrCT"
-
+	fmt.Println("doPrivateKey2", doPrivateKey)
 	// 调用SigEncrypt函数
 	startTime = time.Now()
 	Sigma := MODEL.SigEncrypt(PK, CT, doPrivateKey)
 	elapsedTime = time.Since(startTime)
 	fmt.Printf("SigEncrypt took %s\n", elapsedTime)
-
+	fmt.Println("doPrivateKey3", doPrivateKey)
 	// 打印结果
 	fmt.Println("Sigma1:", Sigma.Sigma1)
 	fmt.Println("Sigma2:", Sigma.Sigma2)
@@ -373,17 +369,17 @@ func main() {
 	fmt.Println("I1:", Index.I1)
 	fmt.Println("I2:", Index.I2)
 	fmt.Println("I3:", Index.I3)
-
+	fmt.Println("doPrivateKey4", doPrivateKey)
 	// 测量Trapdoor函数的运行时间
 	startTime = time.Now()
-	TW := MODEL.Trapdoor(KW, PK, duPrivateKey, userKeys.PkDO)
+	TW := MODEL.Trapdoor(KW, PK, duPrivateKey, userKeys.PkDO, userKeys)
 	elapsedTime = time.Since(startTime)
 	fmt.Printf("Trapdoor took %s\n", elapsedTime)
 	fmt.Println(TW.TW2, Index.I1, Index.I2, TW.TW1)
 	fmt.Println("TW1:", TW.TW1)
 	fmt.Println("TW2:", TW.TW2)
 	fmt.Println("TW3:", TW.TW3)
-
+	fmt.Println("doPrivateKey5", doPrivateKey)
 	//进行撤销
 	revokedAttrs := []string{"attr4"}
 	startTime = time.Now()

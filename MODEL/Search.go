@@ -24,13 +24,21 @@ func Search(I Index, TW TW, Scirc []int, GBFA *BloomFilter, PK PublicKey, sigma 
 	fmt.Println(TW.TW2, I.I1, I.I2, TW.TW1)
 	// 计算 e(TW_2, I_1) * I_2^{TW_1}
 	finalResult := pairing.NewGT().Mul(pairResult, expResult)
-	fmt.Println(TW.TW3)
-	fmt.Println(finalResult)
-	//	if !finalResult.Equals(TW.TW3) {
+	fmt.Println("TW.TW3", TW.TW3)
+	fmt.Println("TW.TW1 ", TW.TW1)
+	fmt.Println("finalResult", finalResult)
+	fmt.Println("UserKeys.SkDU", UserKeys.SkDU)
+	fmt.Println("User PkDO:", UserKeys.PkDO)
+	//if !finalResult.Equals(TW.TW3) {
+
 	//		return false
-	//	}
+	//}
 
 	// 计算 e(g, sigma_i2)
+	l := pairing.NewGT()
+	//	c := pairing.NewGT()
+	l.Pair(PK.W, PK.G)
+
 	left := pairing.NewGT()
 	left.Pair(PK.G, sigma.Sigma2)
 	// 计算 e(sigma_i1, I_3)
@@ -46,6 +54,11 @@ func Search(I Index, TW TW, Scirc []int, GBFA *BloomFilter, PK PublicKey, sigma 
 	test := pairing.NewG1().PowZn(PK.W, UserKeys.SkDO)
 	fmt.Println("test", test)
 	fmt.Println("PK.G123123", PK.G)
+	fmt.Println("l:", l)
+	fmt.Println("UserKeys.SkDO", UserKeys.SkDO)
+	te := pairing.NewGT().PowZn(l, UserKeys.SkDO)
+
+	fmt.Println("te", te)
 	// 比较两个值是否相等
 	if left.Equals(right) {
 		fmt.Println("The equation holds!")
